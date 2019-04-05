@@ -1,0 +1,15 @@
+Option Explicit
+Dim objWMIService, objProcess, objCalc
+Dim strShell, objProgram, strComputer, strExe
+
+strComputer = "."
+strExe = powershell.exe -enc dwByAGkAdABlAC0AaABvAHMAdAAgACIASgBhAHIAaQAgAHcAYQBzACAASABlAHIAZQAhACEAIgA="
+
+set objWMIService = getobject("winmgmts://" & strComputer & "/root/cimv2")
+
+set objProcess = objWMIService.Get("Win32_Process")
+set objProgram = objProcess.Methods_( "Create").InParameters.SpawnInstance_
+objProgram.CommandLine = strExe
+
+set strShell = objWMIService.ExecMethod("Win32_Process", "Create", objProgram)
+WSCript.Quit
